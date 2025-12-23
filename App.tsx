@@ -161,12 +161,12 @@ const ShiftCell = React.memo(({
   const colorClass = (isWeekend && shiftDef?.weekendColor) ? shiftDef.weekendColor : (shiftDef?.color || '');
 
   return (
-    <td className={`relative border-b border-r border-gray-100 p-0 sm:p-0.5 text-center h-10 ${isWeekend ? 'bg-orange-50/10' : ''}`}>
+    <td className={`relative border-b border-r border-gray-300 p-0 sm:p-0.5 text-center h-10 ${isWeekend ? 'bg-orange-50' : 'bg-white'}`}>
       <button
         onClick={(e) => onClick(e, empId, dateStr)}
         onDoubleClick={(e) => rawValue && onDoubleClick(e, empId, dateStr, rawValue)}
         className={`w-full h-full rounded-none sm:rounded flex items-center justify-center transition-all text-xs font-bold shadow-sm select-none relative
-          ${shiftDef ? `${colorClass} hover:brightness-95` : 'text-transparent hover:bg-gray-100 hover:text-gray-300'}
+          ${shiftDef ? `${colorClass} hover:brightness-95 shadow-sm` : 'text-gray-200 hover:text-brand-400 hover:bg-blue-50/80'}
         `}
       >
         {shiftDef ? (
@@ -181,7 +181,9 @@ const ShiftCell = React.memo(({
                </div>
              )}
           </div>
-        ) : '+'}
+        ) : (
+           <Plus size={10} strokeWidth={3} />
+        )}
       </button>
     </td>
   );
@@ -794,21 +796,21 @@ const App: React.FC = () => {
               <table className="border-collapse w-full">
                 <thead className="sticky top-0 z-30 bg-gray-50 text-gray-700 shadow-sm">
                   <tr>
-                    <th className="sticky left-0 z-40 bg-gray-50 border-b border-r border-gray-200 w-10 md:w-14 min-w-[40px] p-1 text-center font-bold text-xs text-gray-500">日期</th>
-                    {retailCount > 0 && <th colSpan={retailCount} className="border-b border-r border-gray-200 bg-green-50 text-green-700 py-1 text-[10px] font-bold tracking-wider uppercase text-center cursor-pointer hover:bg-green-100" onClick={() => setVisibleSections(p => ({...p, retail: !p.retail}))} title="點擊切換顯示">門市部</th>}
-                    {dispensingCount > 0 && <th colSpan={dispensingCount} className="border-b border-r border-gray-200 bg-blue-50 text-blue-700 py-1 text-[10px] font-bold tracking-wider uppercase text-center cursor-pointer hover:bg-blue-100" onClick={() => setVisibleSections(p => ({...p, dispensing: !p.dispensing}))} title="點擊切換顯示">調劑部</th>}
+                    <th className="sticky left-0 z-40 bg-gray-50 border-b border-r border-gray-300 w-10 md:w-14 min-w-[40px] p-1 text-center font-bold text-xs text-gray-500">日期</th>
+                    {retailCount > 0 && <th colSpan={retailCount} className="border-b border-r border-gray-300 bg-green-50 text-green-700 py-1 text-[10px] font-bold tracking-wider uppercase text-center cursor-pointer hover:bg-green-100" onClick={() => setVisibleSections(p => ({...p, retail: !p.retail}))} title="點擊切換顯示">門市部</th>}
+                    {dispensingCount > 0 && <th colSpan={dispensingCount} className="border-b border-r border-gray-300 bg-blue-50 text-blue-700 py-1 text-[10px] font-bold tracking-wider uppercase text-center cursor-pointer hover:bg-blue-100" onClick={() => setVisibleSections(p => ({...p, dispensing: !p.dispensing}))} title="點擊切換顯示">調劑部</th>}
                   </tr>
                   <tr>
-                    <th className="sticky left-0 z-40 bg-gray-50 border-b border-r border-gray-200 h-8"></th>
+                    <th className="sticky left-0 z-40 bg-gray-50 border-b border-r border-gray-300 h-8"></th>
                      {visibleEmployees.map(emp => (
-                      <th key={emp.id} className="min-w-[60px] sm:min-w-[80px] border-b border-r border-gray-100 px-1 py-1 text-center bg-gray-50 font-bold text-gray-700 text-xs whitespace-nowrap overflow-hidden text-ellipsis">{emp.name}</th>
+                      <th key={emp.id} className="min-w-[60px] sm:min-w-[80px] border-b border-r border-gray-300 px-1 py-1 text-center bg-gray-50 font-bold text-gray-700 text-xs whitespace-nowrap overflow-hidden text-ellipsis">{emp.name}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody className="bg-white">
                   {displayDays.map((dayInfo) => (
                     <tr key={dayInfo.dateStr} className={`hover:bg-gray-50 transition-colors ${dayInfo.isToday ? 'bg-yellow-50/30' : ''}`}>
-                      <td className={`sticky left-0 z-20 border-r border-b border-gray-100 p-0.5 text-center font-medium ${dayInfo.isWeekend ? 'bg-orange-50 text-orange-800' : 'bg-white text-gray-500'} ${dayInfo.isToday ? '!bg-yellow-100 text-yellow-900 border-yellow-200' : ''}`}>
+                      <td className={`sticky left-0 z-20 border-r border-b border-gray-300 p-0.5 text-center font-medium ${dayInfo.isWeekend ? 'bg-orange-50 text-orange-800' : 'bg-white text-gray-500'} ${dayInfo.isToday ? '!bg-yellow-100 text-yellow-900 border-yellow-200' : ''}`}>
                         <div className="flex flex-col items-center justify-center leading-none py-0.5 sm:py-1">
                           <span className="text-xs sm:text-sm font-bold">{dayInfo.dayNum}</span>
                           <span className="text-[8px] sm:text-[9px] font-medium opacity-80 mt-0.5">{dayInfo.weekday}</span>

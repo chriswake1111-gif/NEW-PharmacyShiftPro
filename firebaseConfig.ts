@@ -1,23 +1,14 @@
-// IMPORTANT: These values are loaded from Environment Variables.
-// We explicitly check both VITE_ and REACT_APP_ prefixes to support different build tools (Vite vs CRA/Next.js)
-// Explicitly listing them is required for some bundlers to perform static replacement.
-
-// @ts-ignore
-const getViteEnv = (key: string) => (import.meta && import.meta.env ? import.meta.env[key] : undefined);
-const getProcessEnv = (key: string) => (typeof process !== 'undefined' && process.env ? process.env[key] : undefined);
-
-const getValue = (viteKey: string, reactKey: string) => {
-  return getViteEnv(viteKey) || getProcessEnv(reactKey) || '';
-};
+// IMPORTANT: For Vite applications, environment variables must begin with VITE_
+// We use (import.meta as any).env to avoid TypeScript errors when vite types are not loaded.
 
 export const firebaseConfig = {
-  apiKey: getValue('VITE_FIREBASE_API_KEY', 'REACT_APP_FIREBASE_API_KEY'),
-  authDomain: getValue('VITE_FIREBASE_AUTH_DOMAIN', 'REACT_APP_FIREBASE_AUTH_DOMAIN'),
-  projectId: getValue('VITE_FIREBASE_PROJECT_ID', 'REACT_APP_FIREBASE_PROJECT_ID'),
-  storageBucket: getValue('VITE_FIREBASE_STORAGE_BUCKET', 'REACT_APP_FIREBASE_STORAGE_BUCKET'),
-  messagingSenderId: getValue('VITE_FIREBASE_MESSAGING_SENDER_ID', 'REACT_APP_FIREBASE_MESSAGING_SENDER_ID'),
-  appId: getValue('VITE_FIREBASE_APP_ID', 'REACT_APP_FIREBASE_APP_ID'),
-  measurementId: getValue('VITE_FIREBASE_MEASUREMENT_ID', 'REACT_APP_FIREBASE_MEASUREMENT_ID')
+  apiKey: ((import.meta as any).env && (import.meta as any).env.VITE_FIREBASE_API_KEY) || "AIzaSyC7wEuKNTB7ZdvZDgf8woscmExbalHjqBw",
+  authDomain: ((import.meta as any).env && (import.meta as any).env.VITE_FIREBASE_AUTH_DOMAIN) || "new-pharmacyshiftpro.firebaseapp.com",
+  projectId: ((import.meta as any).env && (import.meta as any).env.VITE_FIREBASE_PROJECT_ID) || "new-pharmacyshiftpro",
+  storageBucket: ((import.meta as any).env && (import.meta as any).env.VITE_FIREBASE_STORAGE_BUCKET) || "new-pharmacyshiftpro.firebasestorage.app",
+  messagingSenderId: ((import.meta as any).env && (import.meta as any).env.VITE_FIREBASE_MESSAGING_SENDER_ID) || "135841144238",
+  appId: ((import.meta as any).env && (import.meta as any).env.VITE_FIREBASE_APP_ID) || "1:135841144238:web:9b6c5869190537a462bc3f",
+  measurementId: ((import.meta as any).env && (import.meta as any).env.VITE_FIREBASE_MEASUREMENT_ID)
 };
 
 // Check if config is actually set correctly
