@@ -1,0 +1,5 @@
+{
+  "name": "新版 千百岳排班系統",
+  "description": "A professional shift scheduling application for pharmacy staff. Features monthly views, custom shift types (A, P, Full Day), leave management, cloud sync, and Excel export capabilities.",
+  "requestFramePermissions": []
+}
