@@ -143,6 +143,7 @@ const ShiftCell = React.memo(({
   empId, 
   dateStr, 
   isWeekend, 
+  isEndOfWeek,
   rawValue, 
   shiftDefs, 
   onClick, 
@@ -151,6 +152,7 @@ const ShiftCell = React.memo(({
   empId: string;
   dateStr: string;
   isWeekend: boolean;
+  isEndOfWeek?: boolean;
   rawValue: string | undefined;
   shiftDefs: Record<string, ShiftDefinition>;
   onClick: (e: React.MouseEvent, empId: string, dateStr: string) => void;
@@ -161,7 +163,7 @@ const ShiftCell = React.memo(({
   const colorClass = (isWeekend && shiftDef?.weekendColor) ? shiftDef.weekendColor : (shiftDef?.color || '');
 
   return (
-    <td className={`relative border-b border-r border-gray-300 p-0 sm:p-0.5 text-center h-10 ${isWeekend ? 'bg-orange-50' : 'bg-white'}`}>
+    <td className={`relative ${isEndOfWeek ? 'border-b-4 border-gray-400' : 'border-b border-gray-300'} border-r border-gray-300 p-0 sm:p-0.5 text-center h-10 ${isWeekend ? 'bg-orange-50' : 'bg-white'}`}>
       <button
         onClick={(e) => onClick(e, empId, dateStr)}
         onDoubleClick={(e) => rawValue && onDoubleClick(e, empId, dateStr, rawValue)}
@@ -808,9 +810,11 @@ const App: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white">
-                  {displayDays.map((dayInfo) => (
+                  {displayDays.map((dayInfo) => {
+                    const isEndOfWeek = dayInfo.dateObj.getDay() === 0;
+                    return (
                     <tr key={dayInfo.dateStr} className={`hover:bg-gray-50 transition-colors ${dayInfo.isToday ? 'bg-yellow-50/30' : ''}`}>
-                      <td className={`sticky left-0 z-20 border-r border-b border-gray-300 p-0.5 text-center font-medium ${dayInfo.isWeekend ? 'bg-orange-50 text-orange-800' : 'bg-white text-gray-500'} ${dayInfo.isToday ? '!bg-yellow-100 text-yellow-900 border-yellow-200' : ''}`}>
+                      <td className={`sticky left-0 z-20 border-r ${isEndOfWeek ? 'border-b-4 border-gray-400' : 'border-b border-gray-300'} p-0.5 text-center font-medium ${dayInfo.isWeekend ? 'bg-orange-50 text-orange-800' : 'bg-white text-gray-500'} ${dayInfo.isToday ? '!bg-yellow-100 text-yellow-900 border-yellow-200' : ''}`}>
                         <div className="flex flex-col items-center justify-center leading-none py-0.5 sm:py-1">
                           <span className="text-xs sm:text-sm font-bold">{dayInfo.dayNum}</span>
                           <span className="text-[8px] sm:text-[9px] font-medium opacity-80 mt-0.5">{dayInfo.weekday}</span>
@@ -822,6 +826,7 @@ const App: React.FC = () => {
                           empId={emp.id}
                           dateStr={dayInfo.dateStr}
                           isWeekend={dayInfo.isWeekend}
+                          isEndOfWeek={isEndOfWeek}
                           rawValue={storeSchedule[dayInfo.dateStr]?.[emp.id]}
                           shiftDefs={shiftDefs}
                           onClick={onCellClick}
@@ -829,7 +834,7 @@ const App: React.FC = () => {
                         />
                       ))}
                     </tr>
-                  ))}
+                  )})}
                 </tbody>
               </table>
             </div>
