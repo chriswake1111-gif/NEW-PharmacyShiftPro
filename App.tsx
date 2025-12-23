@@ -840,19 +840,19 @@ const App: React.FC = () => {
         {selectedCell && (
           <>
             <div className="fixed inset-0 z-[110] cursor-default bg-transparent" onClick={() => setSelectedCell(null)} />
-            <div className="fixed bg-white shadow-2xl rounded-xl border border-gray-200 p-4 min-w-[320px] z-[120] animate-fade-in-up" style={{ top: selectedCell.position.top, bottom: selectedCell.position.bottom, left: selectedCell.position.left, right: selectedCell.position.right }}>
-              <div className="flex justify-between items-center mb-3 pb-2 border-b border-gray-100">
-                <span className="text-sm font-bold text-gray-700">選擇班別</span>
-                <button onClick={() => setSelectedCell(null)}><XCircle size={18} className="text-gray-400 hover:text-gray-600"/></button>
+            <div className="fixed bg-white shadow-2xl rounded-xl border border-gray-200 p-3 w-[240px] z-[120] animate-fade-in-up" style={{ top: selectedCell.position.top, bottom: selectedCell.position.bottom, left: selectedCell.position.left, right: selectedCell.position.right }}>
+              <div className="flex justify-between items-center mb-2 pb-1.5 border-b border-gray-100">
+                <span className="text-xs font-bold text-gray-700">選擇班別</span>
+                <button onClick={() => setSelectedCell(null)}><XCircle size={16} className="text-gray-400 hover:text-gray-600"/></button>
               </div>
-              <div className="grid grid-cols-3 gap-3 w-full">
+              <div className="grid grid-cols-3 gap-2 w-full">
                 {sortedShifts.map(def => (
-                  <button key={def.code} onClick={() => { if (selectedCell) updateSchedule(selectedCell.empId, selectedCell.dateStr, def.code); }} className={`text-sm px-2 py-3 rounded-lg ${def.color} hover:brightness-95 hover:shadow-md transition-all truncate border font-bold flex flex-col items-center justify-center gap-1`}>
-                    <span>{def.shortLabel}</span><span className="text-[10px] opacity-70 scale-90">{def.hours}h</span>
+                  <button key={def.code} onClick={() => { if (selectedCell) updateSchedule(selectedCell.empId, selectedCell.dateStr, def.code); }} className={`text-xs px-1 py-2 rounded-lg ${def.color} hover:brightness-95 hover:shadow-md transition-all truncate border font-bold flex flex-col items-center justify-center gap-0.5`}>
+                    <span>{def.shortLabel}</span><span className="text-[9px] opacity-70 scale-90">{def.hours}h</span>
                   </button>
                 ))}
-                <button onClick={() => { if (selectedCell) handleDeleteShift(selectedCell.empId, selectedCell.dateStr); }} className="text-sm px-2 py-3 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 transition-all font-bold flex items-center justify-center gap-1 col-span-1" title="清除排班">
-                  <Trash2 size={16} /> <span className="text-xs">清除</span>
+                <button onClick={() => { if (selectedCell) handleDeleteShift(selectedCell.empId, selectedCell.dateStr); }} className="text-xs px-1 py-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 transition-all font-bold flex items-center justify-center gap-1 col-span-1" title="清除排班">
+                  <Trash2 size={14} /> <span>清除</span>
                 </button>
               </div>
             </div>
@@ -862,22 +862,22 @@ const App: React.FC = () => {
         {selectedOvertimeCell && (
           <>
              <div className="fixed inset-0 z-[130] cursor-default bg-transparent" onClick={() => setSelectedOvertimeCell(null)} />
-            <div className="fixed bg-white shadow-2xl rounded-xl border border-gray-200 p-4 w-[280px] z-[140] animate-fade-in-up" style={{ top: selectedOvertimeCell.position.top, bottom: selectedOvertimeCell.position.bottom, left: selectedOvertimeCell.position.left, right: selectedOvertimeCell.position.right }}>
-               <div className="flex justify-between items-center mb-3 pb-2 border-b border-gray-100">
-                <div className="flex items-center gap-2"><Clock size={18} className="text-brand-600" /><span className="text-sm font-bold text-gray-700">設定加班 / 上課</span></div>
-                <button onClick={() => setSelectedOvertimeCell(null)}><XCircle size={18} className="text-gray-400 hover:text-gray-600"/></button>
+            <div className="fixed bg-white shadow-2xl rounded-xl border border-gray-200 p-3 w-[220px] z-[140] animate-fade-in-up" style={{ top: selectedOvertimeCell.position.top, bottom: selectedOvertimeCell.position.bottom, left: selectedOvertimeCell.position.left, right: selectedOvertimeCell.position.right }}>
+               <div className="flex justify-between items-center mb-2 pb-1.5 border-b border-gray-100">
+                <div className="flex items-center gap-2"><Clock size={16} className="text-brand-600" /><span className="text-xs font-bold text-gray-700">加班 / 上課</span></div>
+                <button onClick={() => setSelectedOvertimeCell(null)}><XCircle size={16} className="text-gray-400 hover:text-gray-600"/></button>
               </div>
-              <div className="grid grid-cols-2 gap-3 mb-3">
+              <div className="grid grid-cols-2 gap-2 mb-2">
                  {[1, 2, 3, 4].map(hour => (
-                    <button key={hour} onClick={() => { if (selectedOvertimeCell) { handleUpdateShiftAttributes(selectedOvertimeCell.empId, selectedOvertimeCell.dateStr, selectedOvertimeCell.baseCode, hour, selectedOvertimeCell.isLesson); setSelectedOvertimeCell(null); } }} className={`flex flex-col items-center justify-center py-2 rounded-lg border transition-all font-bold ${selectedOvertimeCell.currentOt === hour ? 'bg-red-600 text-white border-red-700 shadow-md ring-2 ring-red-200' : 'bg-red-50 text-red-700 border-red-100 hover:bg-red-100 hover:shadow-sm'}`}>
-                       <span className="text-lg">+{hour}</span><span className="text-[10px] opacity-70">小時</span>
+                    <button key={hour} onClick={() => { if (selectedOvertimeCell) { handleUpdateShiftAttributes(selectedOvertimeCell.empId, selectedOvertimeCell.dateStr, selectedOvertimeCell.baseCode, hour, selectedOvertimeCell.isLesson); setSelectedOvertimeCell(null); } }} className={`flex flex-col items-center justify-center py-1.5 rounded-lg border transition-all font-bold ${selectedOvertimeCell.currentOt === hour ? 'bg-red-600 text-white border-red-700 shadow-md ring-2 ring-red-200' : 'bg-red-50 text-red-700 border-red-100 hover:bg-red-100 hover:shadow-sm'}`}>
+                       <span className="text-base">+{hour}</span>
                     </button>
                  ))}
               </div>
-              <button onClick={() => { if (selectedOvertimeCell) { handleUpdateShiftAttributes(selectedOvertimeCell.empId, selectedOvertimeCell.dateStr, selectedOvertimeCell.baseCode, selectedOvertimeCell.currentOt, !selectedOvertimeCell.isLesson); } }} className={`w-full py-3 mb-3 rounded-lg border flex items-center justify-center gap-2 font-bold transition-all ${selectedOvertimeCell.isLesson ? 'bg-indigo-600 text-white border-indigo-700 shadow-md ring-2 ring-indigo-200' : 'bg-indigo-50 text-indigo-700 border-indigo-100 hover:bg-indigo-100'}`}>
-                  <GraduationCap size={20} /><span>{selectedOvertimeCell.isLesson ? '已安排上課' : '上課 (1300-1700)'}</span>
+              <button onClick={() => { if (selectedOvertimeCell) { handleUpdateShiftAttributes(selectedOvertimeCell.empId, selectedOvertimeCell.dateStr, selectedOvertimeCell.baseCode, selectedOvertimeCell.currentOt, !selectedOvertimeCell.isLesson); } }} className={`w-full py-2 mb-2 rounded-lg border flex items-center justify-center gap-2 font-bold transition-all text-xs ${selectedOvertimeCell.isLesson ? 'bg-indigo-600 text-white border-indigo-700 shadow-md ring-2 ring-indigo-200' : 'bg-indigo-50 text-indigo-700 border-indigo-100 hover:bg-indigo-100'}`}>
+                  <GraduationCap size={16} /><span>{selectedOvertimeCell.isLesson ? '已安排上課' : '標記為上課'}</span>
               </button>
-              <button onClick={() => { if (selectedOvertimeCell) { handleUpdateShiftAttributes(selectedOvertimeCell.empId, selectedOvertimeCell.dateStr, selectedOvertimeCell.baseCode, 0, false); setSelectedOvertimeCell(null); } }} className="w-full py-2 text-xs text-gray-500 hover:bg-gray-50 rounded border border-gray-200">清除加班與上課</button>
+              <button onClick={() => { if (selectedOvertimeCell) { handleUpdateShiftAttributes(selectedOvertimeCell.empId, selectedOvertimeCell.dateStr, selectedOvertimeCell.baseCode, 0, false); setSelectedOvertimeCell(null); } }} className="w-full py-1.5 text-[10px] text-gray-500 hover:bg-gray-50 rounded border border-gray-200">清除加班與上課</button>
             </div>
           </>
         )}
@@ -885,15 +885,15 @@ const App: React.FC = () => {
         {selectedAnnualCell && (
            <>
              <div className="fixed inset-0 z-[130] cursor-default bg-transparent" onClick={() => setSelectedAnnualCell(null)} />
-             <div className="fixed bg-white shadow-2xl rounded-xl border border-gray-200 p-4 w-[300px] z-[140] animate-fade-in-up" style={{ top: selectedAnnualCell.position.top, bottom: selectedAnnualCell.position.bottom, left: selectedAnnualCell.position.left, right: selectedAnnualCell.position.right }}>
-                <div className="flex justify-between items-center mb-3 pb-2 border-b border-gray-100">
-                 <div className="flex items-center gap-2"><div className="w-5 h-5 bg-green-100 text-green-700 rounded flex items-center justify-center"><Clock size={14} /></div><span className="text-sm font-bold text-gray-700">設定特休時數</span></div>
-                 <button onClick={() => setSelectedAnnualCell(null)}><XCircle size={18} className="text-gray-400 hover:text-gray-600"/></button>
+             <div className="fixed bg-white shadow-2xl rounded-xl border border-gray-200 p-3 w-[240px] z-[140] animate-fade-in-up" style={{ top: selectedAnnualCell.position.top, bottom: selectedAnnualCell.position.bottom, left: selectedAnnualCell.position.left, right: selectedAnnualCell.position.right }}>
+                <div className="flex justify-between items-center mb-2 pb-1.5 border-b border-gray-100">
+                 <div className="flex items-center gap-2"><div className="w-4 h-4 bg-green-100 text-green-700 rounded flex items-center justify-center"><Clock size={12} /></div><span className="text-xs font-bold text-gray-700">特休時數</span></div>
+                 <button onClick={() => setSelectedAnnualCell(null)}><XCircle size={16} className="text-gray-400 hover:text-gray-600"/></button>
                </div>
-               <div className="grid grid-cols-5 gap-2">
+               <div className="grid grid-cols-5 gap-1.5">
                   {Array.from({ length: 10 }, (_, i) => i + 1).map(hour => (
-                     <button key={hour} onClick={() => { updateSchedule(selectedAnnualCell.empId, selectedAnnualCell.dateStr, `${BuiltInShifts.ANNUAL}:${hour}`); setSelectedAnnualCell(null); }} className="flex flex-col items-center justify-center py-2 rounded-lg bg-green-50 text-green-700 border border-green-100 hover:bg-green-100 hover:shadow-sm transition-all font-bold">
-                        <span className="text-sm">{hour}</span>
+                     <button key={hour} onClick={() => { updateSchedule(selectedAnnualCell.empId, selectedAnnualCell.dateStr, `${BuiltInShifts.ANNUAL}:${hour}`); setSelectedAnnualCell(null); }} className="flex flex-col items-center justify-center py-1.5 rounded-lg bg-green-50 text-green-700 border border-green-100 hover:bg-green-100 hover:shadow-sm transition-all font-bold">
+                        <span className="text-xs">{hour}</span>
                      </button>
                   ))}
                </div>
