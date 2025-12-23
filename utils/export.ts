@@ -12,18 +12,14 @@ export const exportToExcel = (
   dateRange: Date[],
   shiftDefinitions: Record<string, ShiftDefinition>
 ) => {
-  // Ensure XLSX is available
-  // @ts-ignore
-  const X = XLSX;
-  const utils = X.utils || (X.default && X.default.utils);
-  const write = X.writeFile || (X.default && X.default.writeFile);
-  const bookNew = utils ? utils.book_new : null;
-  const bookAppend = utils ? utils.book_append_sheet : null;
-  const aoaToSheet = utils ? utils.aoa_to_sheet : null;
+  // Use XLSX standard functions directly
+  const { utils, writeFile } = XLSX;
 
-  if (!utils || !write || !bookNew || !bookAppend || !aoaToSheet) {
+  if (!utils || !writeFile) {
     throw new Error("Excel 函式庫未正確載入，請重新整理頁面後再試。");
   }
+
+  const { book_new, book_append_sheet, aoa_to_sheet } = utils;
 
   const retailEmps = employees.filter(e => e.department === 'retail');
   const dispensingEmps = employees.filter(e => e.department === 'dispensing');
@@ -99,7 +95,7 @@ export const exportToExcel = (
 
   // Create Worksheet
   const worksheetData = [titleRow, [], headerRow, ...data];
-  const ws = aoaToSheet(worksheetData);
+  const ws = aoa_to_sheet(worksheetData);
 
   // Merge Title
   if(!ws['!merges']) ws['!merges'] = [];
@@ -113,14 +109,14 @@ export const exportToExcel = (
   ws['!cols'] = wscols;
 
   // Create Workbook and Write
-  const wb = bookNew();
+  const wb = book_new();
   
   // Safe sheet name (max 31 chars, no invalid chars)
   const safeSheetName = (storeName || '排班').replace(/[\\/?*[\]]/g, '').substring(0, 30);
-  bookAppend(wb, ws, safeSheetName);
+  book_append_sheet(wb, ws, safeSheetName);
   
   const safeFileName = `${storeName.replace(/[\\/?*[\]]/g, '')}_排班表_${startDateStr.replace(/\//g, '-')}.xlsx`;
-  write(wb, safeFileName);
+  writeFile(wb, safeFileName);
 };
 
 function getCellText(schedule: StoreSchedule, dateKey: string, empId: string, shiftDefinitions: Record<string, ShiftDefinition>): string {

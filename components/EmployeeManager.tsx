@@ -2,7 +2,7 @@
 import React, { useState, useRef } from 'react';
 import { Employee, Department } from '../types';
 import { DEPARTMENTS } from '../constants';
-import { X, Plus, Trash2, BriefcaseMedical, Store, Pencil, Save, GripVertical, Users } from 'lucide-react';
+import { X, Plus, Trash2, Briefcase, Store, Pencil, Save, GripVertical, Users } from 'lucide-react';
 
 interface Props {
   employees: Employee[];
@@ -160,7 +160,7 @@ export const EmployeeManager: React.FC<Props> = ({ employees, setEmployees, isOp
       >
         <div className="p-2">
           <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-2 mb-2 pl-1">
-            {dept === 'retail' ? <Store size={14} /> : <BriefcaseMedical size={14} />}
+            {dept === 'retail' ? <Store size={14} /> : <Briefcase size={14} />}
             {DEPARTMENTS[dept]}
             <span className="bg-gray-200 text-gray-600 px-1.5 py-0.5 rounded text-[10px]">
               {filteredEmps.length}
@@ -272,7 +272,7 @@ export const EmployeeManager: React.FC<Props> = ({ employees, setEmployees, isOp
                      onClick={() => setDepartment('dispensing')}
                      className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-medium border transition-all ${department === 'dispensing' ? 'bg-white border-brand-500 text-brand-700 shadow-sm ring-1 ring-brand-100' : 'bg-gray-100 border-transparent text-gray-500 hover:bg-gray-200'}`}
                    >
-                     <BriefcaseMedical size={16} /> {DEPARTMENTS.dispensing}
+                     <Briefcase size={16} /> {DEPARTMENTS.dispensing}
                    </button>
                 </div>
                 

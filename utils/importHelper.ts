@@ -1,11 +1,8 @@
 
-import * as XLSX_PKG from 'xlsx';
+import * as XLSX from 'xlsx';
 import { format, isValid } from 'date-fns';
 import { Employee, ScheduleProject, StoreSchedule, BuiltInShifts, Department, ShiftDefinition } from '../types';
 import { DEFAULT_SHIFT_DEFINITIONS } from '../constants';
-
-// Handle Import Compatibility for different environments (CDN vs Node)
-const XLSX = (XLSX_PKG as any).default || XLSX_PKG;
 
 /**
  * Text mapping for standard shifts. 
