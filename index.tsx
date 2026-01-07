@@ -1,7 +1,11 @@
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
+
+// Print version to console to help debugging cache issues
+console.log('%c PharmacyShiftPro v1.3 Loaded ', 'background: #0284c7; color: #fff; border-radius: 4px; padding: 4px; font-weight: bold;');
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

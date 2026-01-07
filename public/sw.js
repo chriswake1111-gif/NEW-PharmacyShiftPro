@@ -1,5 +1,5 @@
 
-const CACHE_NAME = 'pharmacy-schedule-v1.2';
+const CACHE_NAME = 'pharmacy-schedule-v1.3';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
