@@ -1,40 +1,41 @@
+// 修正：在 Vite 專案中，TypeScript 需要此類型定義參考才能辨識 import.meta.env 屬性
+/// <reference types="vite/client" />
 
-// IMPORTANT: For Vite applications, environment variables must begin with VITE_
-// We use (import.meta as any).env to avoid TypeScript errors when vite types are not loaded.
-
-// 簡化環境變數存取
-const env = (import.meta as any).env || {};
+/**
+ * Firebase 設定檔
+ * 說明：在 Vite 環境下，客戶端環境變數必須以 VITE_ 開頭。
+ * 這些變數會在開發環境讀取 .env 檔案，並在建置時被替換為實際數值。
+ */
 
 export const firebaseConfig = {
-  apiKey: env.VITE_FIREBASE_API_KEY || "",
-  authDomain: env.VITE_FIREBASE_AUTH_DOMAIN || "",
-  projectId: env.VITE_FIREBASE_PROJECT_ID || "",
-  storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET || "",
-  messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
-  appId: env.VITE_FIREBASE_APP_ID || "",
-  measurementId: env.VITE_FIREBASE_MEASUREMENT_ID || ""
+  // 直接讀取 Vite 的環境變數，編譯時會被替換為實際數值
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || ""
 };
 
 /**
- * Check if the Firebase configuration is complete.
- * This prevents the app from hanging when cloud features are triggered without keys.
+ * 檢查 Firebase 設定是否完整
  */
-export const isFirebaseConfigured = () => {
-  const essentialKeys = ['apiKey', 'projectId', 'appId'];
-  const missingKeys = essentialKeys.filter(key => !firebaseConfig[key as keyof typeof firebaseConfig]);
-  
-  if (missingKeys.length > 0) {
-    // 增加詳細的除錯訊息，幫助使用者確認環境變數是否有讀取到
-    // 這些訊息會顯示在瀏覽器的 Console (按 F12 -> Console 分頁)
-    console.group('Firebase Configuration Error');
-    console.warn(`[設定檢查] 缺少必要的金鑰: ${missingKeys.join(', ')}`);
-    console.log('目前環境變數讀取狀態:', {
-        apiKey: firebaseConfig.apiKey ? '✅ 已設定' : '❌ 未讀取到 (MISSING)',
-        projectId: firebaseConfig.projectId ? '✅ 已設定' : '❌ 未讀取到 (MISSING)',
-        appId: firebaseConfig.appId ? '✅ 已設定' : '❌ 未讀取到 (MISSING)',
-        // 提醒：如果是 Vercel，修改變數後必須 Redeploy 才會生效
+export const isFirebaseConfigured = (): boolean => {
+  // 檢查最關鍵的三個金鑰，確保雲端功能可以正常運作
+  const hasApiKey = !!firebaseConfig.apiKey && firebaseConfig.apiKey !== "";
+  const hasProjectId = !!firebaseConfig.projectId && firebaseConfig.projectId !== "";
+  const hasAppId = !!firebaseConfig.appId && firebaseConfig.appId !== "";
+
+  if (!hasApiKey || !hasProjectId || !hasAppId) {
+    // 輸出詳細的偵錯表格，方便開發者確認是哪一個環節出錯
+    console.group('%c 🔥 Firebase 設定診斷 ', 'background: #f44336; color: #fff; padding: 2px 4px; border-radius: 4px;');
+    console.table({
+      'VITE_FIREBASE_API_KEY': hasApiKey ? '✅ 已載入' : '❌ 缺失 (或是名稱不正確)',
+      'VITE_FIREBASE_PROJECT_ID': hasProjectId ? '✅ 已載入' : '❌ 缺失',
+      'VITE_FIREBASE_APP_ID': hasAppId ? '✅ 已載入' : '❌ 缺失'
     });
-    console.log('提示：如果您已在 Vercel 設定變數但看到此訊息，請務必執行「Redeploy」以更新網站。');
+    console.warn('提示：請確認 Vercel 環境變數名稱是否帶有 "VITE_" 前綴，且設定後有執行 "Redeploy"。');
     console.groupEnd();
     return false;
   }
