@@ -9,7 +9,6 @@ let db: Firestore | null = null;
 // Initialize Firebase safely
 if (isFirebaseConfigured()) {
   try {
-    // Prevent multiple initializations to avoid React Hot Refresh issues
     const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
     db = getFirestore(app);
     console.log("Firebase initialized successfully");
@@ -28,7 +27,7 @@ export interface CloudBackupData {
 
 export const saveToCloud = async (syncId: string, data: CloudBackupData): Promise<void> => {
   if (!db) {
-    throw new Error("Firebase 尚未初始化，請檢查 firebaseConfig.ts 設定是否正確");
+    throw new Error("Firebase 尚未配置或初始化失敗。請確認 firebaseConfig.ts 中的金鑰是否正確。");
   }
   if (!syncId.trim()) {
     throw new Error("請輸入同步代碼");
@@ -43,15 +42,15 @@ export const saveToCloud = async (syncId: string, data: CloudBackupData): Promis
   } catch (error: any) {
     console.error("Cloud Save Error:", error);
     if (error.code === 'permission-denied') {
-      throw new Error("權限不足：請檢查 Firebase Firestore 的 Security Rules 是否已設為測試模式。");
+      throw new Error("權限不足：請確認 Firestore 的安全規則 (Rules) 是否允許寫入，或者您的 IP 是否被封鎖。");
     }
-    throw new Error("上傳失敗：" + (error.message || "未知錯誤"));
+    throw new Error("上傳失敗：" + (error.message || "網路連線異常"));
   }
 };
 
 export const loadFromCloud = async (syncId: string): Promise<CloudBackupData | null> => {
   if (!db) {
-    throw new Error("Firebase 尚未初始化，請檢查 firebaseConfig.ts 設定是否正確");
+    throw new Error("Firebase 尚未配置。");
   }
   if (!syncId.trim()) {
     throw new Error("請輸入同步代碼");
@@ -68,9 +67,6 @@ export const loadFromCloud = async (syncId: string): Promise<CloudBackupData | n
     }
   } catch (error: any) {
     console.error("Cloud Load Error:", error);
-    if (error.code === 'permission-denied') {
-      throw new Error("權限不足：請檢查 Firebase Firestore 的 Security Rules。");
-    }
-    throw new Error("下載失敗：" + (error.message || "未知錯誤"));
+    throw new Error("下載失敗：" + (error.message || "連線逾時"));
   }
 };

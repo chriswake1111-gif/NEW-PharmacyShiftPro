@@ -1,3 +1,4 @@
+
 // IMPORTANT: For Vite applications, environment variables must begin with VITE_
 // We use (import.meta as any).env to avoid TypeScript errors when vite types are not loaded.
 
@@ -11,11 +12,17 @@ export const firebaseConfig = {
   measurementId: ((import.meta as any).env && (import.meta as any).env.VITE_FIREBASE_MEASUREMENT_ID) || ""
 };
 
-// Check if config is actually set correctly
+/**
+ * Check if the Firebase configuration is complete.
+ * This prevents the app from hanging when cloud features are triggered without keys.
+ */
 export const isFirebaseConfigured = () => {
-  const hasKey = firebaseConfig.apiKey && firebaseConfig.apiKey.length > 0;
-  if (!hasKey) {
-    console.warn("Firebase Configuration Missing: API Key is empty. Please set VITE_FIREBASE_API_KEY in your environment variables.");
+  const essentialKeys = ['apiKey', 'projectId', 'appId'];
+  const missingKeys = essentialKeys.filter(key => !firebaseConfig[key as keyof typeof firebaseConfig]);
+  
+  if (missingKeys.length > 0) {
+    console.warn(`Firebase Configuration Missing: [${missingKeys.join(', ')}]. Cloud sync will be disabled.`);
+    return false;
   }
-  return hasKey;
+  return true;
 };
