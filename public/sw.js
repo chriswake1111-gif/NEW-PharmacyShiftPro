@@ -1,5 +1,5 @@
 
-const CACHE_NAME = 'pharmacy-schedule-v1.3';
+const CACHE_NAME = 'pharmacy-schedule-v1.4';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -11,7 +11,8 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
+      // 使用 no-cache 確保抓到最新檔案
+      return cache.addAll(ASSETS_TO_CACHE.map(url => new Request(url, { cache: 'reload' })));
     })
   );
 });
@@ -37,16 +38,25 @@ self.addEventListener('fetch', (event) => {
   // 只處理 http/https 請求
   if (!event.request.url.startsWith('http')) return;
 
+  // 對於 API 請求或 Google Fonts，直接透傳不快取
+  if (event.request.url.includes('firestore') || event.request.url.includes('googleapis')) {
+     return; 
+  }
+
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // 如果網路請求成功，複製一份到快取
-        if (response && response.status === 200 && response.type === 'basic') {
-          const responseToCache = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
+        // 重要：如果遇到 401 (Unauthorized) 或 錯誤，不要寫入快取，直接回傳
+        // 這樣可以避免錯誤的狀態被存起來
+        if (!response || response.status === 401 || response.status !== 200 || response.type !== 'basic') {
+          return response;
         }
+
+        const responseToCache = response.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseToCache);
+        });
+        
         return response;
       })
       .catch(() => {
