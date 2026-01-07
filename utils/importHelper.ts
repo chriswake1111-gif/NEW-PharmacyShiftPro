@@ -250,18 +250,25 @@ export const parseExcelSchedule = async (file: File): Promise<ScheduleProject> =
     }
   }
 
-  let storeName = '匯入分店';
+  // --- 重點修改：從檔案名稱提取分店名稱 ---
+  const fileNameClean = file.name.replace(/\.[^/.]+$/, ""); // 去除副檔名
+  let storeName = fileNameClean;
+
+  // 如果檔案名稱太長，嘗試從 Excel 內容中微調 (保持原本的備案)
   if (rows[headerRowIndex + 1] && rows[headerRowIndex + 1][2]) {
-     const loc = rows[headerRowIndex + 1][2].toString();
-     if(loc.length < 8) storeName = loc;
+     const loc = rows[headerRowIndex + 1][2].toString().trim();
+     if (loc.length > 0 && loc.length < 8 && !fileNameClean.includes(loc)) {
+        // 如果檔名沒提到分店但內容有提到，可以考慮合併或優先使用檔名
+        // 這裡我們遵照使用者指示優先使用檔名
+     }
   }
 
   const titleText = `${currentYear}年${format(minDate, 'M')}月 排班表`;
 
   return {
     id: `proj_${Date.now()}`,
-    name: titleText,
-    storeName,
+    name: storeName, // 預設專案名稱也改為檔案名稱
+    storeName,       // 分店名稱改為檔案名稱
     startDate: format(minDate, 'yyyy-MM-dd'),
     endDate: format(maxDate, 'yyyy-MM-dd'),
     employees,
