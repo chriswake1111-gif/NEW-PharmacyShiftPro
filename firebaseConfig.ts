@@ -1,21 +1,21 @@
-// 修正：在 Vite 專案中，TypeScript 需要此類型定義參考才能辨識 import.meta.env 屬性
-/// <reference types="vite/client" />
-
 /**
  * Firebase 設定檔
  * 說明：在 Vite 環境下，客戶端環境變數必須以 VITE_ 開頭。
  * 這些變數會在開發環境讀取 .env 檔案，並在建置時被替換為實際數值。
  */
 
+// 修正：透過類型斷言存取 Vite 的環境變數，解決因缺乏 'vite/client' 類型定義而導致的 'ImportMeta' 屬性缺失錯誤
+const env = (import.meta as any).env || {};
+
 export const firebaseConfig = {
   // 直接讀取 Vite 的環境變數，編譯時會被替換為實際數值
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "",
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || ""
+  apiKey: env.VITE_FIREBASE_API_KEY || "",
+  authDomain: env.VITE_FIREBASE_AUTH_DOMAIN || "",
+  projectId: env.VITE_FIREBASE_PROJECT_ID || "",
+  storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET || "",
+  messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
+  appId: env.VITE_FIREBASE_APP_ID || "",
+  measurementId: env.VITE_FIREBASE_MEASUREMENT_ID || ""
 };
 
 /**
